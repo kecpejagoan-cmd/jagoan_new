@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAGOAN - Antrean Online</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-color: #1a1a1a;
+        }
+
+        /* --- BACKGROUND SLIDER --- */
+        .bg-slider {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+        }
+
+        .bg-slide {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            filter: blur(3px) brightness(0.7);
+        }
+
+        .bg-slide.active { opacity: 1; }
+
+        .bg-slide:nth-child(1) { background-image: url('https://i.ibb.co.com/d4sPnpr6/2.png'); }
+        .bg-slide:nth-child(2) { background-image: url('https://i.ibb.co.com/JFvr1yjd/Whats-App-Image-2026-07-11-at-15-39-23.jpg'); }
+        .bg-slide:nth-child(3) { background-image: url('https://i.ibb.co.com/Z111nTKc/pelayanan.jpg'); }
+
+        /* --- KARTU FORMULIR --- */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 10;
+            animation: fadeIn 0.6s ease-out;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- HEADER --- */
+        .card-header {
+            background: linear-gradient(135deg, #1a5c9e 0%, #2980b9 50%, #1a5c9e 100%);
+            color: white;
+            padding: 30px 25px 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+            animation: shine 8s infinite linear;
+        }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #f1c40f, #f39c12, #f1c40f, transparent);
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.6);
+        }
+
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .brand-title {
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            margin-bottom: 8px;
+            line-height: 1;
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(180deg, #ffffff 0%, #ffeaa7 50%, #f1c40f 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .divider .line {
+            height: 1px;
+            width: 50px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+        }
+
+        .divider .dot {
+            width: 6px;
+            height: 6px;
+            background: #f1c40f;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(241, 196, 15, 0.8);
+        }
+
+        .subtitle {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            padding: 6px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            position: relative;
+            z-index: 2;
+            text-transform: uppercase;
+            line-height: 1.4;
+            color: #fff;
+        }
+
+        .card-body { padding: 30px; }
+
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #444;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #333;
+            outline: none;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
+        }
+
+        .form-control:focus {
+            border-color: #1a5c9e;
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(26, 92, 158, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .row { display: flex; gap: 15px; }
+        .col-half { flex: 1; }
+
+        /* --- DROPDOWN MULTI-SELECT --- */
+        .dropdown-wrapper { position: relative; user-select: none; }
+
+        .dropdown-trigger {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #999;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+        }
+
+        .dropdown-trigger:hover { border-color: #b0b0b0; }
+
+        .dropdown-trigger.active {
+            border-color: #1a5c9e;
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(26, 92, 158, 0.1);
+        }
+
+        .dropdown-trigger.has-value { color: #333; font-weight: 500; }
+
+        .dropdown-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding-right: 10px;
+        }
+
+        .dropdown-arrow {
+            font-size: 10px;
+            color: #666;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .dropdown-trigger.active .dropdown-arrow { transform: rotate(180deg); }
+
+        .dropdown-panel {
+            position: absolute;
+            bottom: calc(100% + 5px);
+            left: 0; right: 0;
+            background: white;
+            border: 2px solid #1a5c9e;
+            border-radius: 10px;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            z-index: 100;
+        }
+
+        .dropdown-panel.open {
+            max-height: 280px;
+            opacity: 1;
+            overflow-y: auto;
+        }
+
+        .dropdown-panel::-webkit-scrollbar { width: 6px; }
+        .dropdown-panel::-webkit-scrollbar-track { background: #e0e0e0; border-radius: 10px; }
+        .dropdown-panel::-webkit-scrollbar-thumb { background: #1a5c9e; border-radius: 10px; }
+
+        .service-option {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+            margin: 0;
+        }
+
+        .service-option:last-child { border-bottom: none; }
+        .service-option:hover { background: #f0f8ff; }
+        .service-option input[type="checkbox"] { display: none; }
+
+        .checkmark {
+            width: 18px; height: 18px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            background: white;
+        }
+
+        .checkmark::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.2s ease;
+        }
+
+        .service-option.checked .checkmark { background: #1a5c9e; border-color: #1a5c9e; }
+        .service-option.checked .checkmark::after { opacity: 1; transform: scale(1); }
+        .service-option.checked .service-text { color: #1a5c9e; font-weight: 600; }
+
+        .service-text {
+            font-size: 13px;
+            color: #444;
+            transition: all 0.2s ease;
+            line-height: 1.4;
+        }
+
+        /* --- TOMBOL --- */
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #1a5c9e 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(26, 92, 158, 0.4);
+        }
+
+        .btn-submit::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-submit:hover::after { left: 100%; }
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(26, 92, 158, 0.5);
+        }
+        .btn-submit:active { transform: translateY(0); }
+        .btn-submit:disabled {
+            background: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
+            margin-top: 10px;
+        }
+
+        .btn-print:hover { box-shadow: 0 8px 25px rgba(39, 174, 96, 0.5); }
+
+        /* --- HASIL --- */
+        .result-container {
+            display: none;
+            text-align: center;
+            padding: 30px 25px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-container h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .ticket-number {
+            font-size: 70px;
+            font-weight: 700;
+            color: #1a5c9e;
+            margin: 15px 0;
+            border: 5px dashed #1a5c9e;
+            border-radius: 20px;
+            padding: 15px 20px;
+            display: inline-block;
+            min-width: 200px;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 100%);
+            animation: pulse 2s infinite;
+            box-shadow: 0 10px 30px rgba(26, 92, 158, 0.2);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .detail-box {
+            background: #f8faff;
+            border: 1px solid #d0e3ff;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e0e0e0;
+            gap: 10px;
+        }
+
+        .detail-item:last-child { border-bottom: none; }
+
+        .detail-label {
+            font-size: 12px;
+            color: #777;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #1a5c9e;
+            font-weight: 700;
+            text-align: right;
+            max-width: 65%;
+            word-wrap: break-word;
+        }
+
+        .ticket-info {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        /* --- LOADING OVERLAY --- */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+            animation: fadeInOverlay 0.3s ease-out;
+        }
+
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Spinner Animasi */
+        .spinner-container {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin-bottom: 25px;
+        }
+
+        .spinner-ring {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: 4px solid transparent;
+            border-radius: 50%;
+            animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+
+        .spinner-ring:nth-child(1) {
+            border-top-color: #f1c40f;
+            animation-delay: -0.45s;
+        }
+        .spinner-ring:nth-child(2) {
+            border-right-color: #2980b9;
+            animation-delay: -0.3s;
+        }
+        .spinner-ring:nth-child(3) {
+            border-bottom-color: #ffffff;
+            animation-delay: -0.15s;
+        }
+        .spinner-ring:nth-child(4) {
+            border-left-color: #f39c12;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Icon Ayam di tengah spinner */
+        .spinner-center {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 28px;
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.15); }
+        }
+
+        /* Teks Loading */
+        .loading-text {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Animasi titik-titik */
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        .loading-subtext {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        /* Progress Bar kecil */
+        .loading-progress {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .loading-progress::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            height: 100%;
+            width: 40%;
+            background: linear-gradient(90deg, #f1c40f, #f39c12, #f1c40f);
+            border-radius: 10px;
+            animation: progressMove 1.5s ease-in-out infinite;
+        }
+
+        @keyframes progressMove {
+            0% { left: -40%; }
+            100% { left: 100%; }
+        }
+
+        /* --- AREA CETAK --- */
+        #print-area { display: none; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area {
+                display: block !important;
+                position: absolute;
+                left: 0; top: 0;
+                width: 100%;
+                padding: 20px;
+                text-align: center;
+                font-family: 'Poppins', sans-serif;
+            }
+            .bg-slider, .card, .loading-overlay { display: none !important; }
+
+            .print-header {
+                border-bottom: 3px double #000;
+                padding-bottom: 15px;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .print-header h1 {
+                font-size: 32px;
+                font-weight: 900;
+                color: #000;
+                margin-bottom: 5px;
+                letter-spacing: 4px;
+            }
+            .print-header p { font-size: 12px; color: #333; letter-spacing: 1px; }
+            .print-header .print-subtitle { font-size: 12px; color: #333; margin-top: 5px; }
+            .print-number {
+                font-size: 100px;
+                font-weight: 700;
+                color: #000;
+                border: 5px solid #000;
+                border-radius: 15px;
+                padding: 20px;
+                display: inline-block;
+                margin: 20px 0;
+                min-width: 250px;
+            }
+            .print-detail {
+                text-align: left;
+                margin: 20px auto;
+                max-width: 450px;
+                font-size: 14px;
+                border: 1px solid #000;
+                padding: 15px;
+                border-radius: 8px;
+            }
+            .print-detail table { width: 100%; border-collapse: collapse; }
+            .print-detail td { padding: 8px 5px; vertical-align: top; }
+            .print-detail td:first-child { font-weight: 600; width: 35%; }
+            .print-footer {
+                margin-top: 30px;
+                font-size: 12px;
+                color: #333;
+                border-top: 1px dashed #000;
+                padding-top: 15px;
+            }
+            .print-date { font-size: 11px; color: #666; margin-top: 10px; }
+        }
+
+        @media (max-width: 480px) {
+            .card { margin: 15px; max-width: 100%; }
+            .card-body { padding: 20px; }
+            .row { flex-direction: column; gap: 0; }
+            .ticket-number { font-size: 55px; min-width: 160px; }
+            .detail-value { font-size: 13px; }
+
+            .card-header { padding: 25px 20px 20px; }
+            .brand-title { font-size: 34px; letter-spacing: 4px; }
+            .subtitle { font-size: 9px; padding: 5px 12px; }
+            .divider .line { width: 35px; }
+
+            .spinner-container { width: 70px; height: 70px; }
+            .spinner-center { font-size: 22px; }
+            .loading-text { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-slider">
+        <div class="bg-slide active"></div>
+        <div class="bg-slide"></div>
+        <div class="bg-slide"></div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h1 class="brand-title">JAGOAN</h1>
+            <div class="divider">
+                <span class="line"></span>
+                <span class="dot"></span>
+                <span class="line"></span>
+            </div>
+            <span class="subtitle">Jalur Antrian Terintegrasi Online Pejagoan</span>
+        </div>
+
+        <div class="card-body" id="form-section">
+            <form id="queueForm" onsubmit="kirimData(event)">
+                
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" name="nama" class="form-control" placeholder="Masukkan nama sesuai KTP" required>
+                </div>
+
+                <div class="form-group">
+                    <label>NIK (16 Digit)</label>
+                    <input type="number" name="nik" class="form-control" placeholder="Masukkan 16 digit NIK" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-half form-group">
+                        <label>Desa</label>
+                        <select name="desa" class="form-control" required>
+                            <option value="" disabled selected>-- Pilih Desa --</option>
+                            <option value="Aditirto">Aditirto</option>
+                            <option value="Jemur">Jemur</option>
+                            <option value="Karangpoh">Karangpoh</option>
+                            <option value="Kebagoran">Kebagoran</option>
+                            <option value="Kebulusan">Kebulusan</option>
+                            <option value="Kedawung">Kedawung</option>
+                            <option value="Kuwayuhan">Kuwayuhan</option>
+                            <option value="Logede">Logede</option>
+                            <option value="Pejagoan">Pejagoan</option>
+                            <option value="Pengaringan">Pengaringan</option>
+                            <option value="Peniron">Peniron</option>
+                            <option value="Prigi">Prigi</option>
+                            <option value="Watulawang">Watulawang</option>
+                        </select>
+                    </div>
+                    <div class="col-half form-group">
+                        <label>RT / RW</label>
+                        <input type="text" name="rtRw" class="form-control" placeholder="Contoh: 02/04" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Permintaan Layanan</label>
+                    <div class="dropdown-wrapper" id="dropdownWrapper">
+                        <div class="dropdown-trigger" id="dropdownTrigger" onclick="toggleDropdown(event)">
+                            <span class="dropdown-text" id="dropdownText">-- Pilih Layanan --</span>
+                            <span class="dropdown-arrow">▲</span>
+                        </div>
+                        <div class="dropdown-panel" id="dropdownPanel">
+                            <label class="service-option">
+                                <input type="checkbox" name="layanan" value="Aktivasi IKD">
+                                <span class="checkmark"></span>
+                                <span class="service-text">Aktivasi IKD</span>
+                            </label>
+                            <label class="service-option">
+                                <input type="checkbox" name="layanan" value="Penerbitaan Kartu Keluarga">
+                                <span class="checkmark"></span>
+                                <span class="service-text">Penerbitan Kartu Keluarga</span>
+                            </label>
+                            <label class="service-option">
+                                <input type="checkbox" name="layanan" value="Pelayanan Pindah Datang">
+                                <span class="checkmark"></span>
+                                <span class="service-text">Pelayanan Pindah Datang</span>
+                            </label>
+                            <label class="service-option">
+                                <input type="checkbox" name="layanan" value="Penerbitan Akta Kelahiran">
+                                <span class="checkmark"></span>
+                                <span class="service-text">Penerbitan Akta Kelahiran</span>
+                            </label>
+                            <label class="service-option">
+                                <input type="checkbox" name="layanan" value="Penerbitan Akta Kematian">
+                                <span class="checkmark"></span>
+                                <span class="service-text">Penerbitan Akta Kematian</span>
+                            </label>
+                            <label class="service-option">
+                                <input type="checkbox" name="layanan" value="Pelayanan pengantar SKCK">
+                                <span class="checkmark"></span>
+                                <span class="service-text">Pelayanan pengantar SKCK</span>
+                            </label>
+                            <label class="service-option">
+                                <input type="checkbox" name="layanan" value="Pelayanan Pengantar dan Dispensasi Nikah">
+                                <span class="checkmark"></span>
+                                <span class="service-text">Pelayanan Pengantar dan Dispensasi Nikah</span>
+                            </label>
+                            <label class="service-option">
+                                <input type="checkbox" name="layanan" value="Pelayanan Ahli Waris Tanah">
+                                <span class="checkmark"></span>
+                                <span class="service-text">Pelayanan Ahli Waris Tanah</span>
+                            </label>
+                            <label class="service-option">
+                                <input type="checkbox" name="layanan" value="Pelayanan pengantar BBM">
+                                <span class="checkmark"></span>
+                                <span class="service-text">Pelayanan pengantar BBM</span>
+                            </label>
+                            <label class="service-option">
+                                <input type="checkbox" name="layanan" value="Pelayanan Legalisasi Umum">
+                                <span class="checkmark"></span>
+                                <span class="service-text">Pelayanan Legalisasi Umum</span>
+                            </label>
+                            <label class="service-option">
+                                <input type="checkbox" name="layanan" value="Pelayanan Perekaman Ktp el">
+                                <span class="checkmark"></span>
+                                <span class="service-text">Pelayanan Perekaman Ktp El</span>
+                            </label>
+                            <label class="service-option">
+                                <input type="checkbox" name="layanan" value="Pelayanan Pencetakan KIA/KTP">
+                                <span class="checkmark"></span>
+                                <span class="service-text">Pelayanan Pencetakan KIA/KTP</span>
+                            </label>
+                            <label class="service-option">
+                                <input type="checkbox" name="layanan" value="Konsultasi Desa">
+                                <span class="checkmark"></span>
+                                <span class="service-text">Konsultasi Desa</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btnSubmit">Ambil Nomor Antrean</button>
+            </form>
+        </div>
+
+        <div class="result-container" id="result-section">
+            <h3>Antrean Berhasil Diambil</h3>
+            <div class="ticket-number" id="nomorAntrean">-</div>
+            
+            <div class="detail-box">
+                <div class="detail-item">
+                    <span class="detail-label">Nama</span>
+                    <span class="detail-value" id="detailNama">-</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Layanan</span>
+                    <span class="detail-value" id="detailLayanan">-</span>
+                </div>
+            </div>
+
+            <p class="ticket-info">Silakan menunggu panggilan.<br>Permintaan layanan anda segera kami proses :)</p>
+            
+            <button class="btn-submit btn-print" onclick="cetakTiket()">🖨️ Cetak Nomor Antrean</button>
+            <button class="btn-submit" onclick="resetForm()" style="background: #666; margin-top: 10px;">Kembali ke Awal</button>
+        </div>
+    </div>
+
+    <!-- LOADING OVERLAY -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner-container">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-center">🐔</div>
+        </div>
+        <div class="loading-text">
+            Memproses Antrean<span class="loading-dots"></span>
+        </div>
+        <div class="loading-subtext">Mohon tunggu sebentar</div>
+        <div class="loading-progress"></div>
+    </div>
+
+    <div id="print-area">
+        <div class="print-header">
+            <h1>JAGOAN</h1>
+            <p>JALUR ANTRIAN TERINTEGRASI ONLINE PEJAGOAN</p>
+            <p class="print-subtitle">Kecamatan Pejagoan, Kabupaten Kebumen</p>
+        </div>
+
+        <div class="print-number" id="printNomor">-</div>
+
+        <div class="print-detail">
+            <table>
+                <tr><td>Nama Lengkap</td><td>: <span id="printNama">-</span></td></tr>
+                <tr><td>NIK</td><td>: <span id="printNik">-</span></td></tr>
+                <tr><td>Desa</td><td>: <span id="printDesa">-</span></td></tr>
+                <tr><td>RT / RW</td><td>: <span id="printRtRw">-</span></td></tr>
+                <tr><td>Layanan</td><td>: <span id="printLayanan">-</span></td></tr>
+            </table>
+        </div>
+
+        <div class="print-footer">
+            <p>Silakan menunggu panggilan. Simpan tiket ini sebagai bukti antrean.</p>
+            <p class="print-date" id="printDate">-</p>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyGs1wY86zMK78y_SXiwaWFP8lAnuyFJuQKAfXZEooETIeasZ2PB78UtsekLL4JSko/exec';
+
+        // --- BACKGROUND SLIDER ---
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.bg-slide');
+        const totalSlides = slides.length;
+
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % totalSlides;
+            slides[currentSlide].classList.add('active');
+        }
+        setInterval(nextSlide, 5000);
+
+        // --- DROPDOWN MULTI-SELECT ---
+        const dropdownTrigger = document.getElementById('dropdownTrigger');
+        const dropdownPanel = document.getElementById('dropdownPanel');
+        const dropdownText = document.getElementById('dropdownText');
+        const checkboxes = document.querySelectorAll('input[name="layanan"]');
+
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            dropdownTrigger.classList.toggle('active');
+            dropdownPanel.classList.toggle('open');
+        }
+
+        document.addEventListener('click', function(event) {
+            const wrapper = document.getElementById('dropdownWrapper');
+            if (!wrapper.contains(event.target)) {
+                dropdownTrigger.classList.remove('active');
+                dropdownPanel.classList.remove('open');
+            }
+        });
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', function() {
+                const parentLabel = this.closest('.service-option');
+                if (this.checked) {
+                    parentLabel.classList.add('checked');
+                } else {
+                    parentLabel.classList.remove('checked');
+                }
+                updateDropdownText();
+            });
+        });
+
+        function updateDropdownText() {
+            const selected = [];
+            checkboxes.forEach(cb => {
+                if (cb.checked) selected.push(cb.value);
+            });
+
+            if (selected.length === 0) {
+                dropdownText.textContent = '-- Pilih Layanan --';
+                dropdownTrigger.classList.remove('has-value');
+            } else if (selected.length === 1) {
+                dropdownText.textContent = selected[0];
+                dropdownTrigger.classList.add('has-value');
+            } else {
+                dropdownText.textContent = `${selected.length} layanan dipilih`;
+                dropdownTrigger.classList.add('has-value');
+            }
+        }
+
+        function getSelectedLayanan() {
+            const selected = [];
+            checkboxes.forEach(cb => {
+                if (cb.checked) selected.push(cb.value);
+            });
+            return selected;
+        }
+
+        // --- LOADING CONTROL ---
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('show');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('show');
+        }
+
+        // --- KIRIM DATA ---
+        async function kirimData(event) {
+            event.preventDefault();
+
+            const layananDipilih = getSelectedLayanan();
+            if (layananDipilih.length === 0) {
+                alert("Silakan pilih minimal satu layanan terlebih dahulu.");
+                dropdownTrigger.classList.add('active');
+                dropdownPanel.classList.add('open');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmit');
+            btn.innerText = "Memproses...";
+            btn.disabled = true;
+
+            // Tampilkan loading overlay
+            showLoading();
+
+            const form = document.getElementById('queueForm');
+            const formData = new FormData(form);
+            
+            const dataObj = {
+                nama: formData.get('nama'),
+                nik: formData.get('nik'),
+                desa: formData.get('desa'),
+                rtRw: formData.get('rtRw'),
+                layanan: layananDipilih.join(', ')
+            };
+
+            // Minimal durasi loading agar animasi terlihat (1.5 detik)
+            const minLoadingTime = new Promise(resolve => setTimeout(resolve, 1500));
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(dataObj),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                });
+
+                const result = await response.json();
+
+                // Tunggu minimal loading time selesai agar animasi terlihat
+                await minLoadingTime;
+
+                if (result.status === 'success') {
+                    // Sembunyikan loading
+                    hideLoading();
+
+                    document.getElementById('form-section').style.display = 'none';
+                    const resultSection = document.getElementById('result-section');
+                    
+                    document.getElementById('nomorAntrean').innerText = result.nomorAntrean;
+                    document.getElementById('detailNama').innerText = dataObj.nama;
+                    document.getElementById('detailLayanan').innerText = dataObj.layanan;
+                    
+                    resultSection.style.display = 'block';
+
+                    document.getElementById('printNomor').innerText = result.nomorAntrean;
+                    document.getElementById('printNama').innerText = dataObj.nama;
+                    document.getElementById('printNik').innerText = dataObj.nik;
+                    document.getElementById('printDesa').innerText = dataObj.desa;
+                    document.getElementById('printRtRw').innerText = dataObj.rtRw;
+                    document.getElementById('printLayanan').innerText = dataObj.layanan;
+                    
+                    const now = new Date();
+                    const options = { 
+                        weekday: 'long', year: 'numeric', month: 'long', 
+                        day: 'numeric', hour: '2-digit', minute: '2-digit'
+                    };
+                    document.getElementById('printDate').innerText = "Dicetak pada: " + now.toLocaleDateString('id-ID', options);
+
+                } else {
+                    hideLoading();
+                    alert("Gagal mengambil antrean: " + result.message);
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                await minLoadingTime;
+                hideLoading();
+                alert("Terjadi kesalahan koneksi. Silakan coba lagi.");
+            } finally {
+                btn.innerText = "Ambil Nomor Antrean";
+                btn.disabled = false;
+            }
+        }
+
+        function cetakTiket() { window.print(); }
+
+        function resetForm() {
+            document.getElementById('queueForm').reset();
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('form-section').style.display = 'block';
+            
+            dropdownText.textContent = '-- Pilih Layanan --';
+            dropdownTrigger.classList.remove('has-value', 'active');
+            dropdownPanel.classList.remove('open');
+            
+            document.querySelectorAll('.service-option').forEach(opt => {
+                opt.classList.remove('checked');
+            });
+        }
+    </script>
+</body>
+</html>
